@@ -28,12 +28,6 @@ def is_balanced(chain: str) -> bool:
          return False
    return balance == 0
 
-def containsNone(chain: str) -> bool:
-   for item in chain:
-      if item == None:
-         return True
-   return False
-
 def generate_VWR(alphabet : str, size: int) -> None:
    for i in range(1, size + 1):
       generator_VWR(alphabet, [None] * i, 0)
