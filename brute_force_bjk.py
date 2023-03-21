@@ -17,6 +17,23 @@ def contains(chain: str, a: str, b: str) -> bool:
          current_b += 1
    return current_a == len(a) and current_b == len(b)
 
+def is_balanced(chain: str) -> bool:
+   balance = 0
+   for item in chain:
+      if item == '(':
+         balance += 1
+      else:
+         balance -= 1
+      if balance < 0:
+         return False
+   return balance == 0
+
+def containsNone(chain: str) -> bool:
+   for item in chain:
+      if item == None:
+         return True
+   return False
+
 def generate_VWR(alphabet : str, size: int) -> None:
    for i in range(1, size + 1):
       generator_VWR(alphabet, [None] * i, 0)
@@ -26,8 +43,9 @@ def generator_VWR(alphabet: str, variations : List[str], pos : int) -> None:
       variation = ''
       for i in range(len(variations)):
          variation += variations[i]
-      list_variations.append(variation)
+      if is_balanced(variation):
+         list_variations.append(variation)
    else:
       for i in range(len(alphabet)):
-         variations[pos] = alphabet[i]
+         variations[pos] = alphabet[i]   
          generator_VWR(alphabet, variations, pos + 1)
