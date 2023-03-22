@@ -1,21 +1,31 @@
-from typing import List
+from typing import List, Tuple
 
 list_variations: List[str] = []
+
 
 def brute_force(a : str, b: str) -> str:
    generate_VWR('()', 2 * max(len(a), len(b)))
    for variation in list_variations:
-      if contains(variation, a, b):
-         return variation
+      tuple = contains(variation, a, b)
+      if tuple[0]:
+         return variation, tuple[1]
 
-def contains(chain: str, a: str, b: str) -> bool:
+def contains(chain: str, a: str, b: str) -> Tuple[bool, List[int]]:
+   # pretty printing
+   colors_chain = [0] * len(chain)
+   
    current_a, current_b = 0, 0
-   for item in chain:
-      if current_a < len(a) and a[current_a] == item:
+   for i in range(len(chain)):
+      if current_a < len(a) and a[current_a] == chain[i]:
          current_a += 1
-      if current_b < len(b) and b[current_b] == item:
+         colors_chain[i] = 1
+      if current_b < len(b) and b[current_b] == chain[i]:
          current_b += 1
-   return current_a == len(a) and current_b == len(b)
+         if colors_chain[i] == 1:
+            colors_chain[i] = 3
+         else:
+            colors_chain[i] = 2
+   return current_a == len(a) and current_b == len(b), colors_chain
 
 def is_balanced(chain: str) -> bool:
    balance = 0
