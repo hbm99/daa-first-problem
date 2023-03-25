@@ -4,47 +4,61 @@ from typing import List, Tuple
 chains = []
 colors = []
 
-def upgrade_bf(a: str, b: str, current_chain: str, current_colors: List[int]) -> None:
+def upgrade_bf(a: str, b: str, current_chain: str, current_colors: List[int], open_n: int, closed_n: int) -> None:
     if len(a) == 0:
-        chains.append(current_chain + b)
-        for _ in b:
+        for item in b:
+            if item == '(':
+                closed_n += 1
+            else:
+                if closed_n > 0:
+                    closed_n -= 1
+                else:
+                    open_n += 1
             current_colors.append(2)
+        chains.append((current_chain + b, open_n, closed_n))
         colors.append(current_colors)
         return
     if len(b) == 0:
-        chains.append(current_chain + a)
-        for _ in a:
+        for item in a:
+            if item == '(':
+                closed_n += 1
+            else:
+                if closed_n > 0:
+                    closed_n -= 1
+                else:
+                    open_n += 1
             current_colors.append(1)
+        chains.append((current_chain + a, open_n, closed_n))
         colors.append(current_colors)
         return
     if a[0] == b[0]:
-        upgrade_bf(a[1:], b[1:], current_chain + a[0], current_colors + [3])
-    else:
-        upgrade_bf(a[1:], b, current_chain + a[0], current_colors + [1])
-        upgrade_bf(a, b[1:], current_chain + b[0], current_colors + [2])
-        
-def balance(chain: str) -> Tuple[str, int, int]:
-    open = closed = 0
-    for i in range(len(chain)):
-        if chain[i] == '(':
-            closed += 1
+        if a[0] == '(':
+            upgrade_bf(a[1:], b[1:], current_chain + a[0], current_colors + [1], open_n, closed_n + 1)
         else:
-            closed -= 1
-        if closed < 0:
-            open += 1
-            closed = 0
-    open_list = ''.join(['(' for _ in range(open)])
-    closed_list = ''.join([')' for _ in range(closed)])
-    return open_list + chain + closed_list, open, closed
+            if closed_n > 0:
+                upgrade_bf(a[1:], b[1:], current_chain + a[0], current_colors + [3], open_n, closed_n - 1)
+            else:
+                upgrade_bf(a[1:], b[1:], current_chain + a[0], current_colors + [3], open_n + 1, closed_n)
+    else:
+        if a[0] == '(':
+            upgrade_bf(a[1:], b, current_chain + a[0], current_colors + [1], open_n, closed_n + 1)
+        else:
+            if closed_n > 0:
+                upgrade_bf(a[1:], b, current_chain + a[0], current_colors + [1], open_n, closed_n - 1)
+            else:
+                upgrade_bf(a[1:], b, current_chain + a[0], current_colors + [1], open_n + 1, closed_n)
+        if b[0] == '(':
+            upgrade_bf(a, b[1:], current_chain + b[0], current_colors + [2], open_n, closed_n + 1)
+        else:
+            if closed_n > 0:
+                upgrade_bf(a, b[1:], current_chain + b[0], current_colors + [2], open_n, closed_n - 1)
+            else:
+                upgrade_bf(a, b[1:], current_chain + b[0], current_colors + [2], open_n + 1, closed_n)
 
-def find_min_chain_index(a: str, b: str) -> int:
-    upgrade_bf(a, b, '', [])
-    min_chain_i = 0
-    min_chain_size = 10**10
-    for i in range(len(chains)):
-        chains[i], open, closed = balance(chains[i])
-        colors[i] = [0 for _ in range(open)] + colors[i] + [0 for _ in range(closed)]
-        if len(chains[i]) < min_chain_size:
-            min_chain_i = i
-            min_chain_size = len(chains[i])
-    return min_chain_i
+def find_min_chain(a: str, b: str) -> int:
+    upgrade_bf(a, b, '', [], 0, 0)
+    min_to_balance = min(chains, key=lambda x: len(x[0]) + x[1] + x[2])
+    i = chains.index(min_to_balance)
+    min_chain = ''.join(['(' for _ in range(min_to_balance[1])]) + min_to_balance[0] + ''.join([')' for _ in range(min_to_balance[2])])
+    min_chain_colors = [0 for _ in range(min_to_balance[1])] + colors[i] + [0 for _ in range(min_to_balance[2])]
+    return min_chain, min_chain_colors

@@ -35,7 +35,6 @@ def pretty_printing(chain: str, color_code: List[int]) -> None:
             print(Style.RESET_ALL, end = '')
             print(chain[i], end = '')
     print('\n')
-            
 
 
 a, b = random_generator()
@@ -58,9 +57,8 @@ print('Time: ' + str(end_bf))
 
 #upgraded brute force
 start_ubf = time.time()
-min_chain_i = find_min_chain_index(a, b)
+result_upgrade_bf = find_min_chain(a, b)
 end_ubf = time.time() - start_ubf
-result_upgrade_bf = chains[min_chain_i], colors[min_chain_i]
 print(Style.RESET_ALL, end = '')
 print(len(result_upgrade_bf[0]))
 pretty_printing(result_upgrade_bf[0], result_upgrade_bf[1])
