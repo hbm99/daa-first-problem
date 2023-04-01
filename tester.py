@@ -13,11 +13,11 @@ def random_generator() -> Tuple[str, str]:
     
     a = b = ''
     
-    size_a = rd.randint(10, 12)
+    size_a = rd.randint(1, 10)
     for _ in range(size_a):
         a += alphabet[rd.randint(0, 1)]
         
-    size_b = rd.randint(10, 12)
+    size_b = rd.randint(1, 10)
     for _ in range(size_b):
         b += alphabet[rd.randint(0, 1)]
     
@@ -44,7 +44,7 @@ print(Fore.RED + b)
 print()
 
 
-# brute force
+""" # brute force
 start_bf = time.time()
 result_bf = brute_force(a, b)
 end_bf = time.time() - start_bf
@@ -52,15 +52,27 @@ print(Style.RESET_ALL, end = '')
 print(len(result_bf[0]))
 pretty_printing(result_bf[0], result_bf[1])
 print(Style.RESET_ALL, end = '')
-print('Time: ' + str(end_bf))
+print('Time: ' + str(end_bf)) """
 
 
-#upgraded brute force
+# upgraded brute force oc
 start_ubf = time.time()
-result_upgrade_bf = find_min_chain(a, b)
+result_upgrade_bf = find_min_chain_oc(a, b)
 end_ubf = time.time() - start_ubf
 print(Style.RESET_ALL, end = '')
 print(len(result_upgrade_bf[0]))
 pretty_printing(result_upgrade_bf[0], result_upgrade_bf[1])
 print(Style.RESET_ALL, end = '')
 print('Time: ' + str(end_ubf))
+
+# upgraded brute force bf
+start_ubf = time.time()
+result_upgrade_bf = find_min_chain_balance_f(a, b)
+end_ubf = time.time() - start_ubf
+print(Style.RESET_ALL, end = '')
+print(len(result_upgrade_bf))
+print(result_upgrade_bf)
+print(Style.RESET_ALL, end = '')
+print('Time: ' + str(end_ubf))
+
+
