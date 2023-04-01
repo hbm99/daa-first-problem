@@ -1,57 +1,104 @@
 
+from __future__ import annotations
 
 from typing import List
 
+MAX_VALUE = 10**10
 
-def dynamic_solution(a: str, b: str) -> str:
-    dp : List[List[List[int, List[List[int, int]]]]] = [[[0, [[0, 0], [0, 0], [0, 0]]] for _ in range(len(b) + 1)] for _ in range(len(a) + 1)]
-    for i in range(1, len(a) + 1):
-        open_n = closed_n = 0
-        balance_factor = 1
-        if a[i - 1] == '(':
-            closed_n = dp[i - 1][0][1][1][1] + balance_factor
-        else:
-            if dp[i - 1][0][1][1][1] > 0:
-                balance_factor = - 1
-                closed_n = dp[i - 1][0][1][1][1] + balance_factor
-            else:
-                open_n = dp[i - 1][0][1][1][0] + balance_factor
-                
-        cell = dp[i][0]
-        cell[0] = dp[i - 1][0][0] + 1 + balance_factor
-        cell[1][1] = [open_n, closed_n]
-        
-    for j in range(1, len(b) + 1):
-        open_n = closed_n = 0
-        balance_factor = 1
-        if b[j - 1] == '(':
-            closed_n = dp[0][j - 1][1][0][1] + balance_factor
-        else:
-            if dp[0][j - 1][1][0][1] > 0:
-                balance_factor = - 1
-                closed_n = dp[0][j - 1][1][0][1] + balance_factor
-            else:
-                open_n = dp[0][j - 1][1][0][0] + balance_factor
-                
-        cell = dp[0][j]
-        cell[0] = dp[0][j - 1][0] + 1 + balance_factor
-        cell[1][0] = [open_n, closed_n]
+def dp_bjk(a: str, b: str) -> str:
+    dp : List[List[List[int]]] = [[[MAX_VALUE] * (max(len(a), len(b)) + 1) for _ in range(len(b) + 1)] for _ in range(len(a) + 1)]
     
+    dp[0][0][0] = 0
     
-    # dir_r = [0, -1, -1]
-    # dir_c = [-1, -1, 0]
-    # for i in range(1, len(a) + 1):
-    #     for j in range(1, len(b) + 1):
-    #         if a[i - 1] == b[j - 1]:
-    #             cell = dp[i][j]
-    #             cell_poss_vals = [], open_n_poss_vals = [], closed_n_poss_vals = []
-    #             for d in range(len(dir_r)):
-    #                 previous_cell = dp[i + dir_r[d]][j + dir_c[d]]
-    #                 for pill in previous_cell[1]:
-    #                     prev_open_n = pill[0]
-    #                     prev_closed_n = pill[1]
-    #                     if a[i - 1] == '(':
-    #                         cell_poss_vals.append(1 + previous_cell[0] + 1)
-    #                         open_n_poss_vals.append()
-        
+    for i in range(len(a) + 1):
+        for j in range(len(b) + 1):
+            for k in range(len(dp[i][j]) - 1):
+                is_last_character_a = i == len(a)
+                if not is_last_character_a:
+                    value = 0
+                    if a[i] == '(':
+                        value = 1
+                    else: value = -1
+                    bf = k + value
+                    if bf < 0:
+                        dp[i + 1][j][k] = min(dp[i + 1][j][k], dp[i][j][k] + 2)
+                    else:
+                        dp[i + 1][j][bf] = min(dp[i + 1][j][bf], dp[i][j][k] + 1)
+                is_last_character_b = j == len(b)
+                if not is_last_character_b:
+                    if b[j] == '(':
+                        value = 1
+                    else: value = -1
+                    bf = k + value
+                    if bf < 0:
+                        dp[i][j + 1][k] = min(dp[i][j + 1][k], dp[i][j][k] + 2)
+                    else:
+                        dp[i][j + 1][bf] = min(dp[i][j + 1][bf], dp[i][j][k] + 1)
+                if not (is_last_character_a or is_last_character_b):
+                    if a[i] == b[j]:
+                        if bf < 0:
+                            dp[i + 1][j + 1][k] = min(dp[i + 1][j + 1][k], dp[i][j][k] + 2)
+                        else:
+                            dp[i + 1][j + 1][bf] = min(dp[i + 1][j + 1][bf], dp[i][j][k] + 1)
+                            
+                            
+    k = find_best_length(dp, len(a), len(b), len(dp[0][0]))
+    
+    chain = ''.join(build_chain(a, b, dp, k))
+            
+    return chain[::-1]
+
+def build_chain(a : str, b: str, dp: List[List[List[int]]], k: int) -> List[str]:
+    i, j = len(a), len(b)
+    chain = [')'] * k
+    
+    while i > 0 or j > 0:
+        if i > 0 and j > 0 and a[i - 1] == b[j - 1]:
+            val = 1 if a[i - 1] == '(' else -1
+            if dp[i - 1][j - 1][k - val] + 1 == dp[i][j][k]:
+                chain.append(a[i - 1])
+                k -= val
+                i -= 1
+                j -= 1
+                continue
+            elif k == 0 and a[i - 1] == ')' and dp[i - 1][j - 1][k] + 2 == dp[i][j][k]:
+                chain.extend((')', '('))
+                i -= 1
+                j -= 1
+                continue
+        if i > 0:
+            val = 1 if a[i - 1] == '(' else -1
+            if dp[i - 1][j][k - val] + 1 == dp[i][j][k]:
+                chain.append(a[i - 1])
+                k -= val
+                i -= 1
+                continue
+            elif k == 0 and a[i - 1] == ')' and dp[i - 1][j][k] + 2 == dp[i][j][k]:
+                chain.extend((')', '('))
+                i -= 1
+                continue
+        if j > 0:
+            val = 1 if b[j - 1] == '(' else -1
+            if dp[i][j - 1][k - val] + 1 == dp[i][j][k]:
+                chain.append(b[j - 1])
+                k -= val
+                j -= 1
+                continue
+            elif k == 0 and b[j - 1] == ')' and dp[i][j - 1][k] + 2 == dp[i][j][k]:
+                chain.extend((')', '('))
+                j -= 1
+                continue
+    return chain
+
+def find_best_length(dp, len_a: int, len_b: int, deep_length: int) -> int:
+    index = 0
+    best_length = MAX_VALUE
+    for i in range(deep_length):
+        if dp[len_a][len_b][i] + i < best_length:
+            best_length = dp[len_a][len_b][i] + i
+            index = i
+    return index
+
+
+
     

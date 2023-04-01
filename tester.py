@@ -5,6 +5,7 @@ from typing import List, Tuple
 from colorama import Fore, Style
 
 from brute_force_bjk import brute_force
+from dp_bjk import dp_bjk
 from upgrade_bf_bjk import *
 
 
@@ -13,11 +14,11 @@ def random_generator() -> Tuple[str, str]:
     
     a = b = ''
     
-    size_a = rd.randint(1, 10)
+    size_a = rd.randint(100, 300)
     for _ in range(size_a):
         a += alphabet[rd.randint(0, 1)]
         
-    size_b = rd.randint(1, 10)
+    size_b = rd.randint(100, 300)
     for _ in range(size_b):
         b += alphabet[rd.randint(0, 1)]
     
@@ -76,3 +77,11 @@ print(Style.RESET_ALL, end = '')
 print('Time: ' + str(end_ubf))
 
 
+# dynamic programming
+start_ubf = time.time()
+chain = dp_bjk(a, b)
+end_ubf = time.time() - start_ubf
+print(len(chain))
+print(Style.RESET_ALL, end = '')
+print(chain)
+print('Time: ' + str(end_ubf))
