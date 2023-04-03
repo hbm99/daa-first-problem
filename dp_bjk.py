@@ -5,6 +5,7 @@ from typing import List
 
 MAX_VALUE = 10**10
 
+# Optimal solution
 def dp_bjk(a: str, b: str) -> str:
     dp : List[List[List[int]]] = [[[MAX_VALUE] * (len(a) + len(b) + 1) for _ in range(len(b) + 1)] for _ in range(len(a) + 1)]
     

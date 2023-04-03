@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 list_variations: List[str] = []
 
-
+# Brute force solution
 def brute_force(a : str, b: str) -> Tuple[str, List[int]]:
    generate_VWR('()', 2 * (len(a) + len(b)))
    for variation in list_variations:

@@ -5,6 +5,7 @@ chains_oc = []
 chains_bf = []
 colors = []
 
+# Recursive solution counting open and closed parenthesis needed
 def open_closed_bf(a: str, b: str, current_chain: str, current_colors: List[int], open_n: int, closed_n: int) -> None:
     if len(a) == 0:
         for item in b:
@@ -64,6 +65,8 @@ def find_min_chain_oc(a: str, b: str) -> int:
     min_chain_colors = [0 for _ in range(min_to_balance[1])] + colors[i] + [0 for _ in range(min_to_balance[2])]
     return min_chain, min_chain_colors
 
+
+# Balance factor recursive solution 
 def balance_factor_bf(a: str, b: str, current_chain: str, balance_f: int) -> None:
     if len(a) == 0:
         for item in b:

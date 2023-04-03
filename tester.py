@@ -14,7 +14,7 @@ def random_generator() -> Tuple[str, str]:
     alphabet = '()'
     a = b = ''
     
-    size_a = rd.randint(1, 3)
+    size_a = rd.randint(1, 600)
     open_count = closed_count = 0
     for _ in range(size_a):
         number = rd.randint(0, 1)
@@ -24,7 +24,7 @@ def random_generator() -> Tuple[str, str]:
             break
         a += alphabet[number]
         
-    size_b = rd.randint(1, 3)
+    size_b = rd.randint(1, 600)
     open_count = closed_count = 0
     for _ in range(size_b):
         number = rd.randint(0, 1)
@@ -58,35 +58,35 @@ print()
 
 
 # brute force
-start_bf = time.time()
+""" start_bf = time.time()
 result_bf = brute_force(a, b)
 end_bf = time.time() - start_bf
 print(Style.RESET_ALL, end = '')
 print(len(result_bf[0]))
 pretty_printing(result_bf[0], result_bf[1])
 print(Style.RESET_ALL, end = '')
-print('Time: ' + str(end_bf))
+print('Time: ' + str(end_bf)) """
 
 
 # upgraded brute force oc
-start_ubf = time.time()
+""" start_ubf = time.time()
 result_upgrade_bf_oc = find_min_chain_oc(a, b)
 end_ubf = time.time() - start_ubf
 print(Style.RESET_ALL, end = '')
 print(len(result_upgrade_bf_oc[0]))
 pretty_printing(result_upgrade_bf_oc[0], result_upgrade_bf_oc[1])
 print(Style.RESET_ALL, end = '')
-print('Time: ' + str(end_ubf))
+print('Time: ' + str(end_ubf)) """
 
 # upgraded brute force bf
-start_ubf = time.time()
+""" start_ubf = time.time()
 result_upgrade_bf_balance = find_min_chain_balance_f(a, b)
 end_ubf = time.time() - start_ubf
 print(Style.RESET_ALL, end = '')
 print(len(result_upgrade_bf_balance))
 print(result_upgrade_bf_balance)
 print(Style.RESET_ALL, end = '')
-print('Time: ' + str(end_ubf))
+print('Time: ' + str(end_ubf)) """
 
 
 # dynamic programming
@@ -98,8 +98,13 @@ print(Style.RESET_ALL, end = '')
 print(chain)
 print('Time: ' + str(end_ubf))
 
-equal_solution_sizes = len(chain) == len(result_upgrade_bf_oc[0]) == len(result_upgrade_bf_balance) == len(result_bf[0])
+
+# To test all solutions uncomment previous method calls (block comments) 
+# and uncomment next solution sizes comparisons
+# Before testing this, it is recommended to change the chains possible top size at the random generator
+
+""" equal_solution_sizes = len(chain) == len(result_upgrade_bf_oc[0]) == len(result_upgrade_bf_balance) == len(result_bf[0])
 if equal_solution_sizes:
     print(Fore.GREEN + str(equal_solution_sizes))
 else:
-    print(Fore.RED + str(equal_solution_sizes))
+    print(Fore.RED + str(equal_solution_sizes)) """
