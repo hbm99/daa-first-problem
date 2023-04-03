@@ -6,15 +6,14 @@ from typing import List
 MAX_VALUE = 10**10
 
 def dp_bjk(a: str, b: str) -> str:
-    dp : List[List[List[int]]] = [[[MAX_VALUE] * (max(len(a), len(b)) + 1) for _ in range(len(b) + 1)] for _ in range(len(a) + 1)]
+    dp : List[List[List[int]]] = [[[MAX_VALUE] * (len(a) + len(b) + 1) for _ in range(len(b) + 1)] for _ in range(len(a) + 1)]
     
     dp[0][0][0] = 0
     
     for i in range(len(a) + 1):
         for j in range(len(b) + 1):
             for k in range(len(dp[i][j]) - 1):
-                is_last_character_a = i == len(a)
-                if not is_last_character_a:
+                if i < len(a):
                     value = 0
                     if a[i] == '(':
                         value = 1
@@ -24,8 +23,7 @@ def dp_bjk(a: str, b: str) -> str:
                         dp[i + 1][j][k] = min(dp[i + 1][j][k], dp[i][j][k] + 2)
                     else:
                         dp[i + 1][j][bf] = min(dp[i + 1][j][bf], dp[i][j][k] + 1)
-                is_last_character_b = j == len(b)
-                if not is_last_character_b:
+                if j < len(b):
                     if b[j] == '(':
                         value = 1
                     else: value = -1
@@ -34,7 +32,7 @@ def dp_bjk(a: str, b: str) -> str:
                         dp[i][j + 1][k] = min(dp[i][j + 1][k], dp[i][j][k] + 2)
                     else:
                         dp[i][j + 1][bf] = min(dp[i][j + 1][bf], dp[i][j][k] + 1)
-                if not (is_last_character_a or is_last_character_b):
+                if i < len(a) and j < len(b):
                     if a[i] == b[j]:
                         if bf < 0:
                             dp[i + 1][j + 1][k] = min(dp[i + 1][j + 1][k], dp[i][j][k] + 2)

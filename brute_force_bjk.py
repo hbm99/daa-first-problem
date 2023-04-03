@@ -4,7 +4,7 @@ list_variations: List[str] = []
 
 
 def brute_force(a : str, b: str) -> Tuple[str, List[int]]:
-   generate_VWR('()', 2 * max(len(a), len(b)))
+   generate_VWR('()', 2 * (len(a) + len(b)))
    for variation in list_variations:
       tuple = contains(variation, a, b)
       if tuple[0]:

@@ -14,7 +14,7 @@ def random_generator() -> Tuple[str, str]:
     alphabet = '()'
     a = b = ''
     
-    size_a = rd.randint(1, 600)
+    size_a = rd.randint(1, 3)
     open_count = closed_count = 0
     for _ in range(size_a):
         number = rd.randint(0, 1)
@@ -24,7 +24,7 @@ def random_generator() -> Tuple[str, str]:
             break
         a += alphabet[number]
         
-    size_b = rd.randint(1, 600)
+    size_b = rd.randint(1, 3)
     open_count = closed_count = 0
     for _ in range(size_b):
         number = rd.randint(0, 1)
